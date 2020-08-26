@@ -1,23 +1,16 @@
-import React from 'react';
+import React, { useState } from 'react';
+import { TimePicker } from '@blueprintjs/datetime';
 import * as dayjs from 'dayjs';
 import utc from 'dayjs/plugin/utc';
-import timezone from 'dayjs/plugin/timezone';
-import localizedFormat from 'dayjs/plugin/localizedFormat';
 import { getOffsetInteger } from './utils';
-import {
-  COUNTRY_NAME,
-  HOUR_FORMAT,
-  DATE_FORMAT,
-  GMT_OFFSET,
-} from './constants';
+import { COUNTRY_NAME, HOUR_FORMAT, GMT_OFFSET } from './constants';
 import groupBy from 'lodash/groupBy';
 
 dayjs.extend(utc);
-dayjs.extend(timezone);
-dayjs.extend(localizedFormat);
 
 function App() {
-  const current = dayjs().tz('America/El_Salvador').format(DATE_FORMAT);
+  const [date, setDate] = useState(new Date());
+
   const target = [
     {
       'Country Code': 'MX',
@@ -59,25 +52,30 @@ function App() {
   const groups = groupBy(target, GMT_OFFSET);
   return (
     <>
-      <h1>streamzone</h1>
-      <div>
-        <h2>Current:</h2>
-        <h3>{dayjs(current).format(HOUR_FORMAT)}</h3>
-      </div>
-      <div>
-        <h2>Target:</h2>
-        {Object.keys(groups).map((group, index) => {
-          const offset = getOffsetInteger(group);
-          return (
-            <div key={index}>
-              {groups[group].map((item, index) => (
-                <label key={index}>{item[COUNTRY_NAME]} </label>
-              ))}
-              {dayjs(current).utcOffset(offset).format(HOUR_FORMAT)}
-            </div>
-          );
-        })}
-      </div>
+      <main className="container">
+        <div className="column">
+          <h1 className="bp3-heading">streamzone</h1>
+          <TimePicker
+            value={date}
+            onChange={setDate}
+            showArrowButtons
+            useAmPm
+          />
+        </div>
+        <div className="column">
+          {Object.keys(groups).map((group, index) => {
+            const offset = getOffsetInteger(group);
+            return (
+              <div key={index}>
+                {groups[group].map((item, index) => (
+                  <label key={index}>{item[COUNTRY_NAME]} </label>
+                ))}
+                {dayjs(date).utcOffset(offset).format(HOUR_FORMAT)}
+              </div>
+            );
+          })}
+        </div>
+      </main>
     </>
   );
 }
