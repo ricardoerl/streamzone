@@ -1,9 +1,15 @@
 import React, { useState } from 'react';
+import flags from './flag-emojis.json';
 import { TimePicker } from '@blueprintjs/datetime';
 import * as dayjs from 'dayjs';
 import utc from 'dayjs/plugin/utc';
 import { getOffsetInteger } from './utils';
-import { COUNTRY_NAME, HOUR_FORMAT, GMT_OFFSET } from './constants';
+import {
+  COUNTRY_NAME,
+  COUNTRY_CODE,
+  HOUR_FORMAT,
+  GMT_OFFSET,
+} from './constants';
 import groupBy from 'lodash/groupBy';
 
 dayjs.extend(utc);
@@ -38,7 +44,7 @@ function App() {
     },
     {
       'Country Code': 'VE',
-      'Country Name': 'Venezuela, Bolivarian Republic of',
+      'Country Name': 'Venezuela',
       'Time Zone': 'America/Caracas',
       'GMT Offset': 'UTC -04:00',
     },
@@ -67,9 +73,20 @@ function App() {
             const offset = getOffsetInteger(group);
             return (
               <div key={index}>
-                {groups[group].map((item, index) => (
-                  <label key={index}>{item[COUNTRY_NAME]} </label>
-                ))}
+                {groups[group].map((item, index) => {
+                  const name = item[COUNTRY_CODE];
+                  const { emoji } = flags[name];
+                  return (
+                    <span
+                      key={index}
+                      aria-label={item[COUNTRY_NAME]}
+                      role="img"
+                      className="emoji"
+                    >
+                      {emoji}
+                    </span>
+                  );
+                })}
                 {dayjs(date).utcOffset(offset).format(HOUR_FORMAT)}
               </div>
             );

@@ -25,5 +25,6 @@ code {
   flex-grow: 1;
 }
 
-.sidebar {
+.emoji {
+  margin-right: 0.25em;
 }
