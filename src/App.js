@@ -3,6 +3,7 @@ import * as dayjs from 'dayjs';
 import utc from 'dayjs/plugin/utc';
 import timezone from 'dayjs/plugin/timezone';
 import localizedFormat from 'dayjs/plugin/localizedFormat';
+import { getOffsetInteger } from './utils';
 
 dayjs.extend(utc);
 dayjs.extend(timezone);
@@ -57,7 +58,7 @@ function App() {
       <div>
         <h2>Target:</h2>
         {target.map((item, index) => {
-          const offset = -3;
+          const offset = getOffsetInteger(item['GMT Offset']);
           return (
             <div key={index}>
               <h3>
