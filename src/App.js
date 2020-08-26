@@ -10,6 +10,7 @@ import {
   DATE_FORMAT,
   GMT_OFFSET,
 } from './constants';
+import groupBy from 'lodash/groupBy';
 
 dayjs.extend(utc);
 dayjs.extend(timezone);
@@ -55,22 +56,24 @@ function App() {
       'GMT Offset': 'UTC +02:00',
     },
   ];
+  const groups = groupBy(target, GMT_OFFSET);
   return (
     <>
       <h1>streamzone</h1>
       <div>
-        <h2>Current: {current}</h2>
+        <h2>Current:</h2>
+        <h3>{dayjs(current).format(HOUR_FORMAT)}</h3>
       </div>
       <div>
         <h2>Target:</h2>
-        {target.map((item, index) => {
-          const offset = getOffsetInteger(item[GMT_OFFSET]);
+        {Object.keys(groups).map((group, index) => {
+          const offset = getOffsetInteger(group);
           return (
             <div key={index}>
-              <h3>
-                {item[COUNTRY_NAME]}:{' '}
-                {dayjs(current).utcOffset(offset).format(HOUR_FORMAT)}
-              </h3>
+              {groups[group].map((item, index) => (
+                <label key={index}>{item[COUNTRY_NAME]} </label>
+              ))}
+              {dayjs(current).utcOffset(offset).format(HOUR_FORMAT)}
             </div>
           );
         })}
