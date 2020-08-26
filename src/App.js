@@ -4,13 +4,19 @@ import utc from 'dayjs/plugin/utc';
 import timezone from 'dayjs/plugin/timezone';
 import localizedFormat from 'dayjs/plugin/localizedFormat';
 import { getOffsetInteger } from './utils';
+import {
+  COUNTRY_NAME,
+  HOUR_FORMAT,
+  DATE_FORMAT,
+  GMT_OFFSET,
+} from './constants';
 
 dayjs.extend(utc);
 dayjs.extend(timezone);
 dayjs.extend(localizedFormat);
 
 function App() {
-  const current = dayjs().tz('America/El_Salvador').format('LLL');
+  const current = dayjs().tz('America/El_Salvador').format(DATE_FORMAT);
   const target = [
     {
       'Country Code': 'MX',
@@ -58,12 +64,12 @@ function App() {
       <div>
         <h2>Target:</h2>
         {target.map((item, index) => {
-          const offset = getOffsetInteger(item['GMT Offset']);
+          const offset = getOffsetInteger(item[GMT_OFFSET]);
           return (
             <div key={index}>
               <h3>
-                {item['Country Name']}:{' '}
-                {dayjs(current).utcOffset(offset).format('LLL')}
+                {item[COUNTRY_NAME]}:{' '}
+                {dayjs(current).utcOffset(offset).format(HOUR_FORMAT)}
               </h3>
             </div>
           );
