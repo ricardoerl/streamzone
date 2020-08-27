@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import flags from './flag-emojis.json';
+import flags from './data/flag-emojis.json';
 import { TimePicker } from '@blueprintjs/datetime';
 import * as dayjs from 'dayjs';
 import utc from 'dayjs/plugin/utc';
