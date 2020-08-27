@@ -1,5 +1,7 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
+import Select from 'react-select';
 import flags from './data/flag-emojis.json';
+import timezones from './data/global-timezones.json';
 import { TimePicker } from '@blueprintjs/datetime';
 import * as dayjs from 'dayjs';
 import utc from 'dayjs/plugin/utc';
@@ -9,53 +11,30 @@ import {
   COUNTRY_CODE,
   HOUR_FORMAT,
   GMT_OFFSET,
+  TIME_ZONE,
 } from './constants';
 import groupBy from 'lodash/groupBy';
 
 dayjs.extend(utc);
 
+const timezonesOptions = timezones.map((timezone) => ({
+  value: timezone[TIME_ZONE],
+  label: timezone[TIME_ZONE],
+  offset: timezone[GMT_OFFSET],
+  name: timezone[COUNTRY_NAME],
+  code: timezone[COUNTRY_CODE],
+}));
+
 function App() {
   const [date, setDate] = useState(new Date());
+  const [timezones, setTimezones] = useState([]);
+  const [timezonesGroups, setTimezonesGroups] = useState({});
 
-  const target = [
-    {
-      'Country Code': 'MX',
-      'Country Name': 'Mexico',
-      'Time Zone': 'America/Bahia_Banderas',
-      'GMT Offset': 'UTC -05:00',
-    },
-    {
-      'Country Code': 'CO',
-      'Country Name': 'Colombia',
-      'Time Zone': 'America/Bogota',
-      'GMT Offset': 'UTC -05:00',
-    },
-    {
-      'Country Code': 'UY',
-      'Country Name': 'Uruguay',
-      'Time Zone': 'America/Montevideo',
-      'GMT Offset': 'UTC -03:00',
-    },
-    {
-      'Country Code': 'AR',
-      'Country Name': 'Argentina',
-      'Time Zone': 'America/Argentina/Salta',
-      'GMT Offset': 'UTC -03:00',
-    },
-    {
-      'Country Code': 'VE',
-      'Country Name': 'Venezuela',
-      'Time Zone': 'America/Caracas',
-      'GMT Offset': 'UTC -04:00',
-    },
-    {
-      'Country Code': 'ES',
-      'Country Name': 'Spain',
-      'Time Zone': 'Europe/Madrid',
-      'GMT Offset': 'UTC +02:00',
-    },
-  ];
-  const groups = groupBy(target, GMT_OFFSET);
+  useEffect(() => {
+    const newTimezonesGroups = groupBy(timezones, 'offset');
+    setTimezonesGroups(newTimezonesGroups);
+  }, [timezones]);
+
   return (
     <>
       <main className="container">
@@ -67,19 +46,19 @@ function App() {
             showArrowButtons
             useAmPm
           />
+          <Select options={timezonesOptions} onChange={setTimezones} isMulti />
         </div>
         <div className="column">
-          {Object.keys(groups).map((group, index) => {
+          {Object.keys(timezonesGroups).map((group, index) => {
             const offset = getOffsetInteger(group);
             return (
               <div key={index}>
-                {groups[group].map((item, index) => {
-                  const name = item[COUNTRY_CODE];
-                  const { emoji } = flags[name];
+                {timezonesGroups[group].map(({ code, name }, index) => {
+                  const { emoji } = flags[code];
                   return (
                     <span
                       key={index}
-                      aria-label={item[COUNTRY_NAME]}
+                      aria-label={name}
                       role="img"
                       className="emoji"
                     >
