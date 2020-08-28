@@ -1,6 +1,6 @@
 # streamzone
 
-Get your schedule for different time zones.
+Get your time for different places.
 
 This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
 
@@ -20,3 +20,4 @@ Launches the test runner in the interactive watch mode.
 ## Roadmap
 
 - [ ] Support multiselect sorting
+- [ ] Support copy to clipboard
