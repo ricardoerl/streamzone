@@ -36,43 +36,40 @@ function App() {
   }, [timezones]);
 
   return (
-    <>
-      <main className="container">
-        <div className="column">
-          <h1 className="bp3-heading">streamzone</h1>
-          <TimePicker
-            value={date}
-            onChange={setDate}
-            showArrowButtons
-            useAmPm
-          />
-          <Select options={timezonesOptions} onChange={setTimezones} isMulti />
-        </div>
-        <div className="column">
-          {Object.keys(timezonesGroups).map((group, index) => {
-            const offset = getOffsetInteger(group);
-            return (
-              <div key={index}>
-                {timezonesGroups[group].map(({ code, name }, index) => {
-                  const { emoji } = flags[code];
-                  return (
-                    <span
-                      key={index}
-                      aria-label={name}
-                      role="img"
-                      className="emoji"
-                    >
-                      {emoji}
-                    </span>
-                  );
-                })}
-                {dayjs(date).utcOffset(offset).format(HOUR_FORMAT)}
-              </div>
-            );
-          })}
-        </div>
-      </main>
-    </>
+    <div className="wrapper">
+      <aside className="sidebar">
+        <h1 className="bp3-heading">streamzone</h1>
+        <p>Get your time for different places.</p>
+        <hr />
+        <p>Select your time:</p>
+        <TimePicker value={date} onChange={setDate} useAmPm />
+        <p>Select other places:</p>
+        <Select options={timezonesOptions} onChange={setTimezones} isMulti />
+      </aside>
+      <article className="content">
+        {Object.keys(timezonesGroups).map((group, index) => {
+          const offset = getOffsetInteger(group);
+          return (
+            <div key={index}>
+              {timezonesGroups[group].map(({ code, name }, index) => {
+                const { emoji } = flags[code];
+                return (
+                  <span
+                    key={index}
+                    aria-label={name}
+                    role="img"
+                    className="emoji"
+                  >
+                    {emoji}
+                  </span>
+                );
+              })}
+              {dayjs(date).utcOffset(offset).format(HOUR_FORMAT)}
+            </div>
+          );
+        })}
+      </article>
+    </div>
   );
 }
 

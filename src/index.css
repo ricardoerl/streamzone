@@ -4,8 +4,20 @@ body {
     'Ubuntu', 'Cantarell', 'Fira Sans', 'Droid Sans', 'Helvetica Neue',
     sans-serif;
   font-size: 18px;
+  height: 100%;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
+}
+
+hr {
+  margin: 1em 0;
+  height: 0.1em;
+  background-color: #eee;
+  border: none;
+}
+
+p {
+  margin: 1em 0 0.5em;
 }
 
 code {
@@ -13,18 +25,60 @@ code {
     monospace;
 }
 
-.container {
-  max-width: 52em;
-  margin: 0 auto;
-  padding: 2em 1em;
-  display: flex;
+/* no grid support? */
+.sidebar {
+  float: left;
+  width: 19.1489%;
+  background-color: #f8f8f8;
 }
 
-.column {
-  padding: 0 1em;
-  flex-grow: 1;
+.content {
+  float: right;
+  width: 79.7872%;
+  font-size: 3em;
+}
+
+/* make a grid */
+.wrapper {
+  display: grid;
+  grid-template-columns: 1fr 3fr;
+  grid-gap: 20px;
+  height: 100vh;
+}
+
+.wrapper > * {
+  padding: 20px;
+  /* needed for the floated layout*/
+  margin-bottom: 10px;
 }
 
 .emoji {
   margin-right: 0.25em;
+}
+
+/* We need to set the widths used on floated items back to auto, and remove the bottom margin as when we have grid we have gaps. */
+@supports (display: grid) {
+  .wrapper > * {
+    width: auto;
+    margin: 0;
+  }
+}
+
+@media (max-width: 769px) {
+  body {
+    font-size: 16px;
+  }
+  .content {
+    font-size: 2em;
+  }
+}
+
+@media (max-width: 481px) {
+  .wrapper {
+    display: flex;
+    flex-direction: column;
+  }
+  .content {
+    font-size: 1.5em;
+  }
 }
