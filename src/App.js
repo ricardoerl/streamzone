@@ -38,7 +38,7 @@ function App() {
   return (
     <div className="wrapper">
       <aside className="sidebar">
-        <h1 className="bp3-heading">streamzone</h1>
+        <h1 className="bp3-heading">🚩 streamzone</h1>
         <p>Get your time for different places.</p>
         <hr />
         <p>Select your time:</p>
