@@ -1,39 +1,46 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useCallback } from 'react';
 import Select from 'react-select';
-import flags from './data/flag-emojis.json';
-import timezones from './data/global-timezones.json';
+import flags from './data/flag-emojis';
+import timezones, { TimeZone } from './data/global-timezones';
 import { TimePicker } from '@blueprintjs/datetime';
-import * as dayjs from 'dayjs';
+import dayjs from 'dayjs';
 import utc from 'dayjs/plugin/utc';
 import { getOffsetInteger } from './utils';
 import {
-  COUNTRY_NAME,
-  COUNTRY_CODE,
   HOUR_FORMAT,
-  GMT_OFFSET,
-  TIME_ZONE,
 } from './constants';
 import groupBy from 'lodash/groupBy';
+import { Dictionary } from 'lodash';
 
 dayjs.extend(utc);
 
+interface TimeZoneOption {
+  value: TimeZone['Time Zone'];
+  label: TimeZone['Time Zone'];
+  offset: TimeZone['GMT Offset'];
+  name: TimeZone['Country Name'];
+  code: TimeZone['Country Code'];
+}
+
 const timezonesOptions = timezones.map((timezone) => ({
-  value: timezone[TIME_ZONE],
-  label: timezone[TIME_ZONE],
-  offset: timezone[GMT_OFFSET],
-  name: timezone[COUNTRY_NAME],
-  code: timezone[COUNTRY_CODE],
+  value: timezone['Time Zone'],
+  label: timezone['Time Zone'],
+  offset: timezone['GMT Offset'],
+  name: timezone['Country Name'],
+  code: timezone['Country Code'],
 }));
 
 function App() {
   const [date, setDate] = useState(new Date());
-  const [timezones, setTimezones] = useState([]);
-  const [timezonesGroups, setTimezonesGroups] = useState({});
+  const [timezones, setTimezones] = useState<Array<TimeZoneOption>>([]);
+  const [timezonesGroups, setTimezonesGroups] = useState<Dictionary<TimeZoneOption[]>>({});
 
   useEffect(() => {
     const newTimezonesGroups = groupBy(timezones, 'offset');
     setTimezonesGroups(newTimezonesGroups);
   }, [timezones]);
+
+  const onSelectChange = useCallback((value) => setTimezones(value), []);
 
   return (
     <div className="wrapper">
@@ -49,7 +56,7 @@ function App() {
         <p>Select your time:</p>
         <TimePicker value={date} onChange={setDate} useAmPm />
         <p>Select other places:</p>
-        <Select options={timezonesOptions} onChange={setTimezones} isMulti />
+        <Select<TimeZoneOption> options={timezonesOptions} onChange={onSelectChange} isMulti />
       </aside>
       <article className="content">
         {Object.keys(timezonesGroups).map((group, index) => {

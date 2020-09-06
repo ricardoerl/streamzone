@@ -1,4 +1,11 @@
-[
+export interface TimeZone {
+  'Country Code': string;
+  'Country Name': string;
+  'Time Zone': string;
+  'GMT Offset': string;
+};
+
+export default [
   {
     "Country Code": "AF",
     "Country Name": "Afghanistan",
@@ -2549,4 +2556,4 @@
     "Time Zone": "Europe/Mariehamn",
     "GMT Offset": "UTC +03:00"
   }
-]
+] as TimeZone[];
